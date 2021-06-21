@@ -1,11 +1,13 @@
 package projeklimbah;
-public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+import Database.koneksi;
+import java.sql.SQLException;
+import java.text.ParseException;
+import View.TransaksiView;
+public class Main {
+     public static void main(String[] args) throws SQLException, ParseException {
+        
+         new TransaksiView().show();
     }
     
 }
