@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -20,6 +19,7 @@ public class TransaksiView extends javax.swing.JFrame {
     private Integer hargatotal;
     private koneksi koneksi;
     private String nama_barang;
+    private String nama_brg, pemasok;
 
    
     public TransaksiView() throws SQLException {
@@ -28,13 +28,9 @@ public class TransaksiView extends javax.swing.JFrame {
         this.transaksi = new Proses();        
         this.arrKeranjang = new ArrayList<>();
         this.showtblkeranjang();
-        this.showtblpesanan();
-        this.showComboBoxOwner();
-        this.showComboBoxNamaBarang();
-        this.showComboBoxHargaBarang();                        
+        this.showtblpesanan();                        
         this.showHargaTotal();
-        //this.viewTabel();
-        
+        //this.viewTabel();  
     }
     
      private void kosong()
@@ -46,23 +42,23 @@ public class TransaksiView extends javax.swing.JFrame {
     
     
     public void showtblkeranjang() {
-        DefaultTableModel dtmKeranjang = new DefaultTableModel(new String[]{"ID Owner","ID Barang",
+        DefaultTableModel dtmKeranjang = new DefaultTableModel(new String[]{"ID Pemasok","ID Barang",
             "Nama Barang","Harga Barang",}, 0);
         for (Transaksi trans : this.arrKeranjang) {
-                dtmKeranjang.addRow(new String[]{trans.getOwner().getId_owner().toString(),
-                    trans.getBarang().getID_barang().toString(), trans.getBarang().getNama_barang(), 
+                dtmKeranjang.addRow(new String[]{trans.getPemasok().getId_pemasok().toString(),
+                    trans.getBarang().getId_barang().toString(), trans.getBarang().getNama_barang(), 
                     trans.getBarang().getHarga_barang().toString()});
         }
         this.tblkeranjang.setModel(dtmKeranjang);
     }
     
     public void showtblpesanan() throws SQLException {
-        DefaultTableModel dtmpesanan = new DefaultTableModel(new String[]{"Nama Owner", "Nama Barang",
+        DefaultTableModel dtmpesanan = new DefaultTableModel(new String[]{"Nama Pemasok", "Nama Barang",
             "Tanggal Transaksi", "Harga Total"}, 0);
         dtmpesanan.setRowCount(0);
         for (Transaksi p : this.arrKeranjang) {
-            dtmpesanan.addRow(new String[]{p.getOwner().getNama_owner(),
-                p.getNama_barang().getNama_barang(), p.getTgl_transaksi().toString(), p.getTotal_harga().toString()
+            dtmpesanan.addRow(new String[]{p.getPemasok().getNama_pemasok(),
+                p.getNama_barang().toString(), p.getTgl_transaksi().toString(), p.getTotal_harga().toString()
             });
         }
         this.tblpesanan.setModel(dtmpesanan);
@@ -70,31 +66,6 @@ public class TransaksiView extends javax.swing.JFrame {
       
     
     }
-    
-    public void showComboBoxOwner() throws SQLException {
-        DefaultComboBoxModel dcbmOwner = new DefaultComboBoxModel();
-        for (Owner ow : this.transaksi.getDataOwner()) {
-            dcbmOwner.addElement(ow.getNama_owner());
-        }
-        this.cbPemasok.setModel(dcbmOwner);
-    }
-    
-    public void showComboBoxNamaBarang() throws SQLException {
-        DefaultComboBoxModel dcbmBarang = new DefaultComboBoxModel();
-        for (Barang br : this.transaksi.getDataBarang()) {
-            dcbmBarang.addElement(br.getNama_barang());
-        }
-        this.cbNamaBarang.setModel(dcbmBarang);
-    } 
-
-    public void showComboBoxHargaBarang() throws SQLException {
-        DefaultComboBoxModel dcbmHargaBarang = new DefaultComboBoxModel();
-        for (Barang br : this.transaksi.getDataBarang()) {
-            dcbmHargaBarang.addElement(br.getHarga_barang());
-        }
-        this.cbHargaBarang.setModel(dcbmHargaBarang);
-    }
-
     public void showHargaTotal() {
         tfTotalHarga.setText(hargatotal.toString());
     }
@@ -142,7 +113,7 @@ public class TransaksiView extends javax.swing.JFrame {
         namabarang.setText("Nama Barang");
 
         namausaha.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
-        namausaha.setText("Penjualan Limbah B3");
+        namausaha.setText("Pengelolaan Limbah B3");
 
         jumlahbarang.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
         jumlahbarang.setText("Jumlah Barang");
@@ -256,12 +227,10 @@ public class TransaksiView extends javax.swing.JFrame {
                 .addComponent(jLabel1))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(namausaha)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(alamat)
+                    .addComponent(namausaha))
                 .addGap(822, 822, 822))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(559, 559, 559)
-                .addComponent(alamat)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -317,33 +286,26 @@ public class TransaksiView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ButtonTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonTotalActionPerformed
-        try {
-            Transaksi tr = new Transaksi();
-            tr.setJumlah_barang(Integer.parseInt(tfJumlahBarang.getText()));
-            tr.setbarang(transaksi.getDataBarang().get(cbHargaBarang.getSelectedIndex()));
-            this.hargatotal = this.transaksi.getDataBarang().get(cbHargaBarang.getSelectedIndex())
-                    .getHarga_barang() * Integer.parseInt(tfJumlahBarang.getText());
-            showHargaTotal();
-            arrKeranjang.add(tr);
-            tfJumlahBarang.setText("");
-        } catch (SQLException ex) {
-            Logger.getLogger(TransaksiView.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
-         
+        Transaksi tr = new Transaksi();
+        tr.setStok_barang(Integer.parseInt(tfJumlahBarang.getText()));
+        tr.setHarga_barang(Integer.parseInt(tfHargaBarang.getText()));
+        this.hargatotal = Integer.parseInt(tfHargaBarang.getText()) * Integer.parseInt(tfJumlahBarang.getText());
+        showHargaTotal();
+        arrKeranjang.add(tr);
+        tfJumlahBarang.setText("");   
     }//GEN-LAST:event_ButtonTotalActionPerformed
 
     private void buttonsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonsimpanActionPerformed
             
-            owner = namaPemasok.getText();
+            pemasok = namaPemasok.getText();
             nama_brg = namabarang.getText();
             tgltransaksi.getText();
             hargatotal.getClass();
             Transaksi p = new Transaksi();
         try {
-            p.setOwner(this.owner);
+            p.setPemasok(this.pemasok);
             p.setNama_barang(this.nama_brg);
-            p.setTgl_transaksi(new SimpleDateFormat("dd/MM/yyyy").parse(this.tfTglTransaksi.getText()));
+            p.setTgl_transaksi(new SimpleDateFormat("dd/mm/yyyy").parse(this.tfTglTransaksi.getText()));
             p.setTotal_harga(hargatotal);
             this.transaksi.insertTransaksi(p);
             this.showtblpesanan();

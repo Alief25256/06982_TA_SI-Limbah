@@ -2,10 +2,8 @@ package Model;
 
 public class Pemasok {
     private Integer id_pemasok;
-    private String nama_pemasok;
-    private String alamat_pemasok;
-    private Integer no_hp_pemasok;
-
+    private String nama_pemasok,alamat_pemasok,nomor_hp_pemasok;
+  
     public Integer getId_pemasok() {
         return id_pemasok;
     }
@@ -30,12 +28,12 @@ public class Pemasok {
         this.alamat_pemasok = alamat_pemasok;
     }
     
-    public Integer getNo_hp_pemasok() {
-        return no_hp_pemasok;
+    public String getNomor_hp_pemasok() {
+        return nomor_hp_pemasok;
     }
 
-    public void setNo_hp_pemasok(Integer no_hp_pemasok) {
-        this.no_hp_pemasok = no_hp_pemasok;
+    public void setNomor_hp_pemasok(String nomor_hp_pemasok) {
+        this.nomor_hp_pemasok = nomor_hp_pemasok;
     }
     
     

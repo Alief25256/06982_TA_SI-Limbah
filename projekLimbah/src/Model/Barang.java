@@ -1,14 +1,8 @@
 package Model;
 
 public class Barang {
-    private Integer id_barang;
-    private String nama_barang;
-    private String kualitas_barang;
-    private Integer harga_barang;
-    private Integer stok_barang;
-    private Pemasok nama_pemasok;
-    private Pemasok id_pemasok;
-    
+    private Integer id_barang,id_pemasok,harga_barang,stok_barang;
+    private String nama_barang,nama_pemasok,kualitas_barang;
 
     public Integer getId_barang() {
         return id_barang;
@@ -41,18 +35,27 @@ public class Barang {
     public void setKualitas_barang(String kualitas_barang){
         this.kualitas_barang = kualitas_barang;
     }
-    public Pemasok getNama_pemasok() {
+    
+     public Integer getStok_barang() {
+        return stok_barang;
+    }
+
+    public void setStok_barang(Integer stok_barang) {
+        this.stok_barang = stok_barang;
+    }
+    
+        public String getNama_pemasok() {
         return nama_pemasok;
     }
 
-    public void setNama_pemasok (Pemasok nama_pemasok) {
+    public void setNama_pemasok (String nama_pemasok) {
         this.nama_pemasok = nama_pemasok;
     }
-        public Pemasok getId_pemasok() {
+        public Integer getId_pemasok() {
         return id_pemasok;
     }
 
-    public void setId_pemasok (Pemasok id_pemasok) {
+    public void setId_pemasok (Integer id_pemasok) {
         this.id_pemasok = id_pemasok;
     }
 

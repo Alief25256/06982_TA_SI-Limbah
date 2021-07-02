@@ -3,68 +3,53 @@ package Controller;
 import Model.*;
 import Database.koneksi;
 import java.sql.*;
-import java.text.*;
 import java.util.*;
 
 public class Proses {
     koneksi koneksi;
     ArrayList<Barang> arrBarang;
-    ArrayList<Pemasok> arrJenis_Barang;
+    ArrayList<Pemasok> arrPemasok;
     ArrayList<Transaksi> arrTransaksi;
     
     public Proses() throws SQLException {
         this.koneksi = new koneksi();
         this.arrBarang = new ArrayList<>();
-        this.arrJenis_Barang = new ArrayList<>();
+        this.arrPemasok = new ArrayList<>();
         this.arrTransaksi = new ArrayList<>();   
     }
     
-   /* public ArrayList<Owner> getDataOwner() throws SQLException {
-        this.arrOwner.clear();
-        ResultSet rs = this.koneksi.GetData("SELECT * FROM OWNER");
+    public ArrayList<Pemasok> getDataPemasok() throws SQLException {
+        this.arrPemasok.clear();
+        ResultSet rs = this.koneksi.GetData("SELECT * FROM pemasok");
         while (rs.next()) {
-            Owner ow = new Owner();
-            ow.setId_owner(rs.getInt("ID_OWNER"));
-            ow.setNama_owner(rs.getString("NAMA_OWNER"));
-            ow.setNo_hp(rs.getString("NO_HP"));
-            this.arrOwner.add(ow);
-        }
-
-        return this.arrOwner;
-    }
-    */
-    
-    public ArrayList<Pemasok> getDataJenis_Barang() throws SQLException {
-        this.arrJenis_Barang.clear();
-        ResultSet rs = this.koneksi.GetData("SELECT * FROM JENIS_BARANG");
-        while (rs.next()) {
-            Pemasok jb = new Pemasok();
-            jb.setID_jenis_barang(rs.getInt("ID_JENIS_BARANG"));
-            jb.setNama_jenis_barang(rs.getString("NAMA_JENIS_BARANG"));
+            Pemasok pk = new Pemasok();
+            pk.setId_pemasok(rs.getInt("id_pemasok"));
+            pk.setNama_pemasok(rs.getString("nama_pemasok"));
+            pk.setAlamat_pemasok(rs.getString("alamat_pemasok"));
+            pk.setNomor_hp_pemasok(rs.getString("nomor_hp_pemasok"));
             
-            this.arrJenis_Barang.add(jb);
+            this.arrPemasok.add(pk);
         }
 
-        return this.arrJenis_Barang;
+        return this.arrPemasok;
     }
     
    
-    public ArrayList<Barang> getDataBarang() throws SQLException {
+    public ArrayList<Barang>getDataBarang() throws SQLException {
         this.arrBarang.clear();
-        ResultSet rs = this.koneksi.GetData("SELECT * FROM BARANG");
-        
+        ResultSet rs = this.koneksi.GetData("SELECT * FROM barang");
         while (rs.next()) {
             
-            Pemasok jb = new Pemasok();
+            Barang br = new Barang();
             
-            Barang b = new Barang();
-            b.setID_barang(rs.getInt("ID_BARANG"));
-            b.setNama_barang(rs.getString("NAMA_BARANG"));
-            b.setHarga_barang(rs.getDouble("HARGA_BARANG"));
-            b.setID_jenis_barang(jb);
-            
-
-            this.arrBarang.add(b);
+            br.setId_barang(rs.getInt("id_barang"));           
+            br.setNama_barang(rs.getString("nama_barang"));
+            br.setKualitas_barang(rs.getString("kualitas_barang"));
+            br.setHarga_barang(rs.getInt("harga_barang"));
+            br.setStok_barang(rs.getInt("stok_barang"));
+            br.setNama_pemasok(rs.getString("nama_pemasok"));
+            br.setId_pemasok(rs.getInt("id_pemasok"));
+            this.arrBarang.add(br);
         }
 
         return this.arrBarang;
@@ -73,59 +58,60 @@ public class Proses {
     
     public ArrayList<Transaksi> getDataTransaksi() throws SQLException {
         this.arrTransaksi.clear();
-        ResultSet rs = this.koneksi.GetData("SELECT OWNER.ID_OWNER, BARANG.ID_BARANG, BARANG.NAMA_BARANG,BARANG.HARGA_BARANG " 
-                +"FROM OWNER JOIN TRANSAKSI ON OWNER.ID_OWNER = TRANSAKSI.ID_OWNER JOIN BARANG ON" 
-                +"BARANG.ID_BARANG = TRANSAKSI.ID_BARANG");
+        ResultSet rs = this.koneksi.GetData("SELECT pemasok.id_pemasok,pemasok.nama_pemasok,barang.id_barang, barang.nama_barang,barang.harga_barang,barang.stok_barang " 
+                +"FROM barang JOIN transaksi ON barang.id_barang = pemasok.id_pemasok JOIN transaksi ON" 
+                +"barang.id_barang = transaksi.id_transaksi");
 
         while (rs.next()) {
-            Owner ow = new Owner();
-            ow.setId_owner(rs.getInt("ID_OWNER"));
-            ow.setNama_owner(rs.getString("NAMA_OWNER"));
-            ow.setNo_hp(rs.getString("NO_HP"));
+            Pemasok pk = new Pemasok();
+            pk.setId_pemasok(rs.getInt("id_pemasok"));
+            pk.setNama_pemasok(rs.getString("nama_pemasok"));
+            pk.setAlamat_pemasok(rs.getString("alamat_pemasok"));
+            pk.setNomor_hp_pemasok(rs.getString("nomor_hp_pemasok"));
             
-            Pemasok jb = new Pemasok();
-            Barang b = new Barang();
-            b.setID_barang(rs.getInt("ID_BARANG"));
-            b.setNama_barang(rs.getString("NAMA_BARANG"));
-            b.setHarga_barang(rs.getDouble("HARGA_BARANG"));
-            b.setID_jenis_barang(jb); 
+            Barang br = new Barang();
+            br.setId_barang(rs.getInt("id_barang"));           
+            br.setNama_barang(rs.getString("nama_barang"));
+            br.setKualitas_barang(rs.getString("kualitas_barang"));
+            br.setHarga_barang(rs.getInt("harga_barang"));
+            br.setStok_barang(rs.getInt("stok_barang"));
+            br.setNama_pemasok(rs.getString("nama_pemasok"));
+            br.setId_pemasok(rs.getInt("id_pemasok"));
             
             Transaksi trans = new Transaksi();
-            trans.setID_transaksi(rs.getInt("ID_TRANSAKSI"));
-            trans.setOwner(ow);
-            trans.setbarang(b);
-            trans.setNama_barang(b);
-            trans.setTgl_transaksi(rs.getDate("TANGGAL_TRANSAKSI"));
-            trans.setJumlah_barang(rs.getInt("JUMLAH_BARANG"));
-            trans.setTotal_harga(rs.getDouble("TOTAL_HARGA")); 
-            trans.setBayar(rs.getDouble("BAYAR"));
-            trans.setKembalian(rs.getDouble("KEMBALIAN"));
+            trans.setId_transaksi(rs.getInt("id_transaksi"));
+            trans.setNama_pemasok(rs.getString("nama_pemasok"));
+            trans.setId_pemasok(rs.getInt("id_pemasok"));
+            trans.setNama_pembeli(rs.getString("nama_pembeli"));
+            trans.setId_barang(rs.getInt("id_barang"));
+            trans.setNama_barang(rs.getString("nama_barang"));
+            trans.setHarga_barang(rs.getInt("harga_barang"));
+            trans.setStok_barang(rs.getInt("stok_barang"));
+            trans.setTotal_harga(rs.getInt("total_harga"));
 
             ResultSet rsDetail_Transaksi = this.koneksi.GetData("create view data_transaksi" 
-                    + "as select a.nama_owner, b.nama_barang, b.tgl_transaksi," 
-                    + "b.total_harga from owner a join transaksi b on" 
-                    + "a.id_owner = b.id_owner");
+                    + "as select a.nama_pemasok, b.nama_barang, b.tgl_transaksi," 
+                    + "b.total_harga from pemasok a join transaksi b on" 
+                    + "a.id_pemasok = b.id_pemasok");
             
             ArrayList<Transaksi> dt = new ArrayList<>();
             while (rsDetail_Transaksi.next()) {
-            Owner own = new Owner();
-            own.setId_owner(rs.getInt("ID_OWNER"));
-            own.setNama_owner(rs.getString("NAMA_OWNER"));
-            own.setNo_hp(rs.getString("NO_HP"));
+            Pemasok ps=new Pemasok();
+            ps.setId_pemasok(rs.getInt("id_pemasok"));
+            ps.setNama_pemasok(rs.getString("nama_pemasok"));
+            ps.setNomor_hp_pemasok(rs.getString("nomor_hp_pemasok"));
+            ps.setAlamat_pemasok(rs.getString("alamat_pemasok"));
             
-            
-
             Transaksi tran = new Transaksi();
-            tran.setID_transaksi(rs.getInt("ID_TRANSAKSI"));
-            tran.setOwner(ow);
-            tran.setbarang(b);
-            tran.setNama_barang(b);
-            tran.setTgl_transaksi(rs.getDate("TANGGAL_TRANSAKSI"));
-            tran.setJumlah_barang(rs.getInt("JUMLAH_BARANG"));
-            tran.setTotal_harga(rs.getDouble("TOTAL_HARGA")); 
-            tran.setBayar(rs.getDouble("BAYAR"));
-            tran.setKembalian(rs.getDouble("KEMBALIAN"));
-
+            tran.setId_transaksi(rs.getInt("id_transaksi"));
+            tran.setNama_pemasok(rs.getString("nama_pemasok"));
+            tran.setId_pemasok(rs.getInt("id_pemasok"));
+            tran.setNama_pembeli(rs.getString("nama_pembeli"));
+            tran.setId_barang(rs.getInt("id_barang"));
+            tran.setNama_barang(rs.getString("nama_barang"));
+            tran.setHarga_barang(rs.getInt("harga_barang"));
+            tran.setStok_barang(rs.getInt("stok_barang"));
+            tran.setTotal_harga(rs.getInt("total_harga"));
             dt.add(tran);
             } 
             trans.setArrTransaksi(dt);
@@ -139,9 +125,9 @@ public class Proses {
         
         public void insertTransaksi(Transaksi trans) throws SQLException {
         
-            this.koneksi.ManipulasiData("INSERT INTO DATA_TRANSAKSI VALUES(" + trans.getOwner().getNama_owner()+ 
-                    "," + "'" + trans.getNama_barang()+ "'" + "," + "'" + trans.getTgl_transaksi()+ "'" + 
-                    "," + trans.getTotal_harga().toString() + ")");
+            this.koneksi.ManipulasiData("INSERT INTO transaksi VALUES" + trans.getId_transaksi()+ "," + trans.getNama_pemasok()+ 
+                   "," + trans.getId_pemasok()+ ","+trans.getNama_pembeli()+ ","+trans.getId_barang()+ "," + trans.getNama_barang()+ ","+ trans.getHarga_barang() +
+                    "," + trans.getStok_barang()+ ","+ trans.getTotal_harga());
     }
     }
 
